@@ -34,5 +34,20 @@ public class Start extends State {
                 return false;
             }
         });
+
+        objectManager.addResource(new GuiButton(70, 150, 200, 75,
+                ImageTools.getImage("images/stuffButton1.png"),
+                ImageTools.getImage("images/stuffButton2.png")) {
+            @Override
+            protected boolean mousePressed(MouseEventFired event) {
+                if (super.mousePressed(event)) {
+                    settingMenu.toggleVisible();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        objectManager.addResource(settingMenu = new SettingMenu());
     }
 }
