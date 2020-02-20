@@ -1,10 +1,12 @@
 plugins {
     id 'java'
     id 'application'
+    id 'maven'
 }
 
 sourceCompatibility = 1.8
 mainClassName = 'Main'
+description = """Cinder-Game"""
 
 group 'com.ritcat.cinder'
 version '1.0'
@@ -28,3 +30,13 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 }
+
+task createPom {
+    description "Generates a pom.xml in the project root directory; useful e.g. for IDEs which can read POM but don't directly support Gradle."
+    doLast {
+        pom {
+        }.writeTo("pom.xml")
+    }
+}
+
+compileJava.dependsOn createPom
