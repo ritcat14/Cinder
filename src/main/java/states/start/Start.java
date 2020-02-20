@@ -1,9 +1,11 @@
 package states.start;
 
+import core.events.Event;
 import core.events.types.MouseEventFired;
 import core.graphics.Window;
 import core.graphics.gui.GuiButton;
 import core.graphics.gui.GuiPanel;
+import core.graphics.gui.Scene;
 import core.states.State;
 import files.ImageTools;
 
@@ -11,6 +13,7 @@ import java.awt.*;
 
 public class Start extends State {
 
+    private Scene scene;
     private SettingMenu settingMenu;
 
     public Start() {
@@ -19,7 +22,12 @@ public class Start extends State {
 
     @Override
     public void init() {
+        objectManager.addResource(scene = new Scene(0, 0, "scenes/startup/startup.txt"));
+        scene.start();
         super.init();
+    }
+
+    private void initMenu() {
         objectManager.addResource(new GuiPanel(50, 50, Window.getWindowWidth() - 100, Window.getWindowHeight() - 100,
                 Color.CYAN));
         objectManager.addResource(new GuiButton(70, 70, 200, 75,
@@ -49,5 +57,20 @@ public class Start extends State {
         });
 
         objectManager.addResource(settingMenu = new SettingMenu());
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (scene.isFinished() && !scene.isRemoved()) {
+            scene.remove();
+            initMenu();
+        }
+    }
+
+    @Override
+    protected void eventFired(Event event) {
+
     }
 }

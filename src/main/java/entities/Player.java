@@ -11,10 +11,12 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-public class Player extends Entity implements EventListener {
+public abstract class Player extends Entity implements EventListener {
 
     private final int imageCount = 19;
     private final double speed = 2.5;
+    private final double diagX = Math.cos(45) * speed;
+    private final double diagY = Math.sin(45) * speed;
     private final String characterName;
 
     private BufferedImage[] leftSprites;
@@ -25,20 +27,17 @@ public class Player extends Entity implements EventListener {
     private volatile BufferedImage sprite;
     private BufferedImage[] images;
 
-    private volatile double preX, preY;
-
     private int counter = 0;
     private int frame = 0;
 
-    private boolean walking = false;
     private boolean up, down, left, right;
-    private int dir;
+
+    private int dir = -1;
 
     public Player(double x, double y, String character) {
         super(x, y, 50, 50);
-        this.characterName = character;
-        this.preX = x;
-        this.preY = y;
+        this.characterName = "RaiKice";
+        //TODO: Change to argument ^^
     }
 
     @Override
@@ -57,27 +56,22 @@ public class Player extends Entity implements EventListener {
         super.init();
     }
 
-    private void updateAnimation(int dir) {
-        this.dir = dir;
+    private void updateAnimation() {
         switch(dir) {
             case 0:
                 images = forwardSprites;
-                preY = y;
                 break;
 
             case 1:
                 images = leftSprites;
-                preX = x;
                 break;
 
             case 2:
                 images = downSprites;
-                preY = y;
                 break;
 
             case 3:
                 images = rightSprites;
-                preX = x;
                 break;
         }
         if (counter % 2 == 0) {
@@ -90,20 +84,44 @@ public class Player extends Entity implements EventListener {
 
     @Override
     public synchronized void update() {
-        if (up) y -= speed;
-        if (down) y += speed;
-        if (left) x -= speed;
-        if (right) x += speed;
 
-        walking = (preX != x || preY != y);
+        boolean walking = up || down || left || right;
+
+        if (walking) {
+            if (up && left) {
+                y -= diagY;
+                x -= diagX;
+                dir = 3;
+            } else if (up && right) {
+                y -= diagY;
+                x += diagX;
+                dir = 1;
+            } else if (down && left) {
+                y += diagY;
+                x -= diagX;
+                dir = 3;
+            } else if (down && right) {
+                y += diagY;
+                x += diagX;
+                dir = 1;
+            } else if (up) {
+                y -= speed;
+                dir = 0;
+            } else if (right) {
+                x += speed;
+                dir = 1;
+            } else if (down) {
+                y += speed;
+                dir = 2;
+            } else if (left) {
+                x -= speed;
+                dir = 3;
+            }
+        }
 
         if (walking) {
             counter++;
-
-            if (y < preY) updateAnimation(0);
-            if (x > preX) updateAnimation(1);
-            if (y > preY) updateAnimation(2);
-            if (x < preX) updateAnimation(3);
+            updateAnimation();
         } else {
             counter = 0;
             frame = 0;

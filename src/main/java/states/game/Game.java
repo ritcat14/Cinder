@@ -1,9 +1,12 @@
 package states.game;
 
+import core.events.Event;
+import entities.Turnstile;
 import core.graphics.Window;
 import core.graphics.gui.GuiPanel;
 import core.states.State;
 import entities.Player;
+import map.Map;
 
 import java.awt.*;
 
@@ -11,7 +14,6 @@ public class Game extends State {
 
     private GuiPanel selectionPanel;
     private RaiKiceButton raiKiceButton;
-    private Player player;
 
     public Game() {
         super("game");
@@ -29,13 +31,17 @@ public class Game extends State {
     }
 
     @Override
+    protected void eventFired(Event event) {
+
+    }
+
+    @Override
     public void update() {
         super.update();
         if (raiKiceButton != null && raiKiceButton.isSelected() && !raiKiceButton.isRemoved()) {
             selectionPanel.remove();
-            player = new Player((Window.getWindowWidth()/2) - 25, (Window.getWindowHeight()/2) - 25,
-                    "RaiKice");
-            objectManager.addResource(player);
+            Player player = new Turnstile((Window.getWindowWidth()/2) - 25, (Window.getWindowHeight()/2) - 25);
+            objectManager.addResource(new Map("maps/turnstileMap.txt", player));
         }
     }
 }
