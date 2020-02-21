@@ -22,8 +22,9 @@ public class Start extends State {
 
     @Override
     public void init() {
-        objectManager.addResource(scene = new Scene(0, 0, "scenes/startup/startup.txt"));
-        scene.start();
+        /*objectManager.addResource(scene = new Scene(0, 0, "scenes/startup/startup.txt"));
+        scene.start();*/
+        initMenu();
         super.init();
     }
 
@@ -63,10 +64,10 @@ public class Start extends State {
     public void update() {
         super.update();
 
-        if (scene.isFinished() && !scene.isRemoved()) {
+        /*if (scene.isFinished() && !scene.isRemoved()) {
             scene.remove();
             initMenu();
-        }
+        }*/
     }
 
     @Override
