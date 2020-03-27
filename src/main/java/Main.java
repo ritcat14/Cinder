@@ -13,7 +13,7 @@ public class Main {
         CinderEngine cinderEngine = new CinderEngine(WIDTH, HEIGHT);
         cinderEngine.addState(new Start());
         cinderEngine.addState(new Game());
-        cinderEngine.setState("start");
+        cinderEngine.setState("game");
         cinderEngine.start();
     }
 

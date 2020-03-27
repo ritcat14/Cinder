@@ -4,17 +4,17 @@ import core.events.Event;
 import core.events.EventDispatcher;
 import core.events.EventListener;
 import core.events.types.KeyEventFired;
+import core.graphics.PixelRenderer;
 import core.objects.Entity;
 import files.ImageTools;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public abstract class Player extends Entity implements EventListener {
 
     private final int imageCount = 19;
-    private final double speed = 2.5;
+    private final double speed = 10;
     private final double diagX = Math.cos(45) * speed;
     private final double diagY = Math.sin(45) * speed;
     private final String characterName;
@@ -33,6 +33,7 @@ public abstract class Player extends Entity implements EventListener {
     private boolean up, down, left, right;
 
     private int dir = -1;
+    private int worldX, worldY;
 
     public Player(double x, double y, String character) {
         super(x, y, 50, 50);
@@ -80,6 +81,11 @@ public abstract class Player extends Entity implements EventListener {
             sprite = images[frame];
             counter = 0;
         }
+    }
+
+    public void setScroll(double mapX, double mapY) {
+        worldX = (int)((mapX * -1) + x);
+        worldY = (int)((mapY * -1) + y);
     }
 
     @Override
@@ -148,9 +154,17 @@ public abstract class Player extends Entity implements EventListener {
         }
     }
 
+    public int getWorldX() {
+        return worldX;
+    }
+
+    public int getWorldY() {
+        return worldY;
+    }
+
     @Override
-    public synchronized void render(Graphics graphics) {
-        graphics.drawImage(sprite, (int)x, (int)y, (int)getWidth(), (int)getHeight(), null);
+    public synchronized void render(PixelRenderer renderer) {
+        renderer.renderImage(sprite, x, y);
     }
 
     private boolean keyPressed(KeyEventFired eventFired) {

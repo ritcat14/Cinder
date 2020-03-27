@@ -1,6 +1,7 @@
 package states.game;
 
 import core.events.types.MouseEventFired;
+import core.graphics.PixelRenderer;
 import core.graphics.Window;
 import core.graphics.gui.GuiButton;
 import files.ImageTools;
@@ -25,9 +26,9 @@ public class RaiKiceButton extends GuiButton {
 
     @Override
     public void init() {
-        super.init();
         images = new BufferedImage[amount];
         for (int i = 0; i < amount; i++) images[i] = ImageTools.getImage("images/game/RaiKice/RaiKicePortrait" + (i + 1) + ".png");
+        super.init();
     }
 
     @Override

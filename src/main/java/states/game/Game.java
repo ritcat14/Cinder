@@ -1,6 +1,7 @@
 package states.game;
 
 import core.events.Event;
+import core.graphics.PixelRenderer;
 import entities.Turnstile;
 import core.graphics.Window;
 import core.graphics.gui.GuiPanel;
@@ -41,7 +42,7 @@ public class Game extends State {
         if (raiKiceButton != null && raiKiceButton.isSelected() && !raiKiceButton.isRemoved()) {
             selectionPanel.remove();
             Player player = new Turnstile((Window.getWindowWidth()/2) - 25, (Window.getWindowHeight()/2) - 25);
-            objectManager.addResource(new Map("maps/turnstileMap.txt", player));
+            objectManager.addResource(new Map("turnstile", player));
         }
     }
 }

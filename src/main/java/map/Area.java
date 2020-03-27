@@ -1,55 +1,59 @@
 package map;
 
-import core.events.Event;
-import core.events.EventListener;
-import core.objects.Object;
-import entities.Player;
-import files.ImageTools;
+import core.graphics.Palette;
+import core.graphics.PixelRenderer;
+import core.graphics.Window;
+import core.objects.Entity;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class Area extends Object implements EventListener {
+import static core.VARS.AREA_SIZE;
+import static core.VARS.TILE_SIZE;
 
-    private final int ID;
+public class Area extends Entity {
 
-    private String backgroundFile;
-    private BufferedImage background;
-    private Player player;
+    private int[] areaData;
+    private Point location;
+    private Palette palette;
 
-    private double x, y;
-
-    public Area(int ID, Player player) {
-        this.ID = ID;
-        this.backgroundFile = "images/maps/0.png";
-        this.player = player;
+    public Area(double x, double y, int[] areaData, Palette palette) {
+        super(x, y, AREA_SIZE * TILE_SIZE, AREA_SIZE * TILE_SIZE);
+        this.areaData = areaData;
+        location = new Point((int)x, (int)y);
+        this.palette = palette;
     }
 
-    public void setScroll(double xScroll, double yScroll) {
+    @Override
+    public void init() {
+        super.init();
+    }
+
+    public synchronized void setScroll(double xScroll, double yScroll) {
         x += xScroll;
         y += yScroll;
     }
 
     @Override
-    public void init() {
-        background = ImageTools.getImage(backgroundFile);
-        player.init();
-        super.init();
-    }
-
-    @Override
     public void update() {
-        player.update();
+        location.setLocation((int)x, (int)y);
     }
 
     @Override
-    public void render(Graphics graphics) {
-        graphics.drawImage(background, (int)x, (int)y, null);
-        player.render(graphics);
+    public void render(PixelRenderer renderer) {
+        for (int ya = 0; ya < AREA_SIZE; ya++) {
+            for (int xa = 0; xa < AREA_SIZE; xa++) {
+                int tx = (int) (x + (xa * TILE_SIZE));
+                int ty = (int) (y + (ya * TILE_SIZE));
+                if (tx < -TILE_SIZE || ty < -TILE_SIZE || tx >= core.graphics.Window.getWindowWidth() || ty >= Window.getWindowHeight())
+                    continue;
+                Tile tile = palette.getTiles()[areaData[xa + ya * (int) AREA_SIZE]];
+                tile.render(renderer, tx, ty);
+            }
+        }
     }
 
-    @Override
-    public void onEvent(Event event) {
-        player.onEvent(event);
+    public Point getLocation() {
+        return location;
     }
+
 }
